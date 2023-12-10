@@ -49,8 +49,8 @@ jobs:
           path: /home/runner/work/<path>/example-app/.venv
           key: ${{ runner.os }}-venv
         
-    tests_lint_formatter_security:
-      name: Lint, Format, Security
+    Lint:
+      name: Lint
       needs: build
       runs-on: ubuntu-latest
       concurrency:
@@ -59,6 +59,7 @@ jobs:
       steps:
         - name: Task lint
           run: poetry run task lint
+          
           
         - name: Lint with flake8
           run: |
@@ -69,16 +70,31 @@ jobs:
         - name: Test with pytest
           run: |
             pytest
-          
+    Formatter:
+        name: Formatter
+        needs: build
+        runs-on: ubuntu-latest
+        concurrency:
+          group: tests_lint_formatter_security
+  
+        steps:      
         - name: Task formatter
           run: poetry run task formatter
           
+    security:
+      name: Security
+      needs: build
+      runs-on: ubuntu-latest
+      concurrency:
+        group: tests_lint_formatter_security
+
+      steps:       
         - name: Task security
           run: poetry run task security
       
     unittests:
       name: unittest
-      needs: [build, tests_lint_formatter_security]
+      needs: [build, Lint, Formatter, security]
       runs-on: ubuntu-latest
       concurrency:
         group: unittest
