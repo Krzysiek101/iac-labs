@@ -23,6 +23,13 @@ jobs:
   
       steps:
       - uses: actions/checkout@v3
+      - name: Cache build venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/work/<path>/example-app/.venv
+          key: ${{ runner.os }}-venv
+          
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
         with:
@@ -41,13 +48,6 @@ jobs:
   
       - name: install poetry dependencies 
         run: poetry install
-
-      - name: Cache build venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: /home/runner/work/<path>/example-app/.venv
-          key: ${{ runner.os }}-venv
         
     Lint:
       name: Lint
