@@ -48,7 +48,9 @@ jobs:
       shell: bash
 
     - name: Install dependencies
-      run: poetry install
+      run: |
+        poetry install
+        cd example-app
 
     - name: Run tests
       run: |
