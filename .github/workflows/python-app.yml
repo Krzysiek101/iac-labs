@@ -47,6 +47,10 @@ jobs:
       run: poetry install
 
     - name: Run tests
-      run: poetry run pytest
+      run: |
+        poetry run task test
+        poetry run task lint
+        poetry run task formatter
+        poetry run task security
       
               
