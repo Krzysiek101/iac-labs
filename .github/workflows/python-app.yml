@@ -13,9 +13,8 @@ permissions:
   contents: read
 
 jobs:
-  job1:
     build:
-  
+      
       runs-on: ubuntu-latest
   
       defaults:
@@ -43,9 +42,12 @@ jobs:
       - name: install poetry dependencies 
         run: poetry install
         
-    job2:
-      needs: job1
+    tests_lint_formatter_security:
+      name: Lint, Format, Security
+      needs: build
       runs-on: ubuntu-latest
+      concurrency:
+        group: tests_lint_formatter_security
 
       steps:
         - name: Task lint
@@ -67,9 +69,12 @@ jobs:
         - name: Task security
           run: poetry run task security
       
-      job3:
-        needs: [job1 , job2]
-        runs-on: ubuntu-latest
-        steps:
-          - name: Task Test
-            run: poetry run task test
+    unittests:
+      name: unittest
+      needs: [build, tests_lint_formatter_security]
+      runs-on: ubuntu-latest
+      concurrency:
+        group: unittest
+      steps:
+        - name: Task Test
+          run: poetry run task test
