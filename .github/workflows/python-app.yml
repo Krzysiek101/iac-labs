@@ -32,6 +32,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        poetry install
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -46,11 +47,6 @@ jobs:
         curl -sSL https://install.python-poetry.org | python3 -
         export PATH="$HOME/.local/bin:$PATH"
       shell: bash
-
-    - name: Install dependencies
-      run: |
-        poetry install
-        cd example-app
 
     - name: Run tests
       run: |
